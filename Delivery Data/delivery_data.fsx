@@ -11,10 +11,11 @@ let grouped = [for row in deliveryData.Rows do
                     |> Seq.filter(fun (z, c) -> c > 20 && z.HasValue) 
                     |> Seq.map(fun (z, c) -> z.Value)
 
-
+let filterByZipAndPrice (pickupZip: System.Nullable<int>) (inputZip: int) =
+    pickupZip.HasValue && pickupZip.Value = inputZip
 
 let getItemsLessThan60ByZip zip = deliveryData.Rows 
-                                    |> Seq.filter(fun i -> i.Pickup_zipcode.HasValue && i.Pickup_zipcode.Value = zip && i.Purchase_price < 60m)
+                                    |> Seq.filter(fun i -> filterByZipAndPrice i.Pickup_zipcode zip)
 
 let getItemsBetween60And120ByZip zip = deliveryData.Rows
                                         |> Seq.filter(fun i -> i.Pickup_zipcode.HasValue && i.Pickup_zipcode.Value = zip && (i.Purchase_price > 60m && i.Purchase_price < 120m))
